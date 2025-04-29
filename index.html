@@ -2,478 +2,478 @@
 <html lang="ja">
 
 <head>
-    <meta charset="UTF-8">
-    <title>ゼンゼロダメージ計算ツール<br>by St</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --bg-color: #111;
-            --text-color: #e0e0e0;
-            --accent-color: #00ffe5;
-            --button-bg: linear-gradient(90deg, #00ffa2, #00ffe5);
-            --button-hover: linear-gradient(90deg, #00ffe5, #00ffa2);
-            --table-header: #222;
-            --table-border: #333;
-            --damage-color: #00ffd5;
-            --shadow: 0 0 10px rgba(0, 255, 229, 0.5);
-        }
+  <meta charset="UTF-8">
+  <title>ゼンゼロダメージ計算ツール<br>by St</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-color: #111;
+      --text-color: #e0e0e0;
+      --accent-color: #00ffe5;
+      --button-bg: linear-gradient(90deg, #00ffa2, #00ffe5);
+      --button-hover: linear-gradient(90deg, #00ffe5, #00ffa2);
+      --table-header: #222;
+      --table-border: #333;
+      --damage-color: #00ffd5;
+      --shadow: 0 0 10px rgba(0, 255, 229, 0.5);
+    }
 
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 10px;
-        }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 10px;
+    }
 
-        h1 {
-            text-align: center;
-            color: var(--accent-color);
-            margin-bottom: 20px;
-            text-shadow: var(--shadow);
-        }
+    h1 {
+      text-align: center;
+      color: var(--accent-color);
+      margin-bottom: 20px;
+      text-shadow: var(--shadow);
+    }
 
-        .controls {
-            text-align: center;
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
 
-        .controls button {
-            background: var(--button-bg);
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 999px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: var(--shadow);
-            font-size: 1em;
-            min-width: 160px;
-        }
+    .controls button {
+      background: var(--button-bg);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: var(--shadow);
+      font-size: 1em;
+      min-width: 160px;
+    }
 
-        .controls button:hover {
-            background: var(--button-hover);
-        }
+    .controls button:hover {
+      background: var(--button-hover);
+    }
 
-        .table-wrapper {
-            overflow-x: auto;
-        }
+    .table-wrapper {
+      overflow-x: auto;
+    }
 
-        table {
-            width: 100%;
-            min-width: 1000px;
-            border-collapse: collapse;
-            table-layout: fixed;
-            margin-bottom: 20px;
-            background: #1a1a1a;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
+    table {
+      width: 100%;
+      min-width: 1000px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-bottom: 20px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
 
-        th,
-        td {
-            border: 1px solid var(--table-border);
-            padding: 8px;
-            text-align: center;
-            position: relative;
-            width: auto;
-        }
+    th,
+    td {
+      border: 1px solid var(--table-border);
+      padding: 8px;
+      text-align: center;
+      position: relative;
+      width: auto;
+    }
 
 
-        th {
-            background-color: var(--table-header);
-            color: var(--accent-color);
-        }
+    th {
+      background-color: var(--table-header);
+      color: var(--accent-color);
+    }
 
-        input[type="number"],
-        input[type="text"] {
-            width: 90%;
-            padding: 5px;
-            border: 1px solid #666;
-            border-radius: 5px;
-            background-color: #222;
-            color: var(--text-color);
-            text-align: center;
-        }
+    input[type="number"],
+    input[type="text"] {
+      width: 90%;
+      padding: 5px;
+      border: 1px solid #666;
+      border-radius: 5px;
+      background-color: #222;
+      color: var(--text-color);
+      text-align: center;
+    }
 
-        .damage {
-            font-weight: bold;
-            color: var(--damage-color);
-        }
+    .damage {
+      font-weight: bold;
+      color: var(--damage-color);
+    }
 
-        .checkbox {
-            transform: scale(1.2);
-        }
+    .checkbox {
+      transform: scale(1.2);
+    }
 
-        #chart-wrapper {
-            margin-top: 30px;
-            text-align: center;
-        }
+    #chart-wrapper {
+      margin-top: 30px;
+      text-align: center;
+    }
 
-        #chart-wrapper canvas {
-            display: block;
-            margin: auto;
-            max-width: 900px;
-            width: 100%;
-            height: auto;
-        }
+    #chart-wrapper canvas {
+      display: block;
+      margin: auto;
+      max-width: 900px;
+      width: 100%;
+      height: auto;
+    }
 
-        .hint-icon {
-            cursor: pointer;
-            margin-left: 5px;
-            font-size: 1em;
-            color: var(--accent-color);
-        }
+    .hint-icon {
+      cursor: pointer;
+      margin-left: 5px;
+      font-size: 1em;
+      color: var(--accent-color);
+    }
 
-        .hint-popup {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8em;
-            white-space: nowrap;
-            z-index: 10;
-            box-shadow: var(--shadow);
-            max-width: 90vw;
-            word-wrap: break-word;
-        }
+    .hint-popup {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.8em;
+      white-space: nowrap;
+      z-index: 10;
+      box-shadow: var(--shadow);
+      max-width: 90vw;
+      word-wrap: break-word;
+    }
 
-        .hint-container:hover .hint-popup,
-        .hint-container.active .hint-popup {
-            display: block;
-        }
+    .hint-container:hover .hint-popup,
+    .hint-container.active .hint-popup {
+      display: block;
+    }
 
-        .foldable {
-            display: none;
-        }
+    .foldable {
+      display: none;
+    }
 
-        .damage-row {
-            background-color: #2a2a2a;
-        }
-    </style>
+    .damage-row {
+      background-color: #2a2a2a;
+    }
+  </style>
 </head>
 
 <body>
 
-    <h1>ゼンゼロダメージ計算ツール<br>by St</h1>
+  <h1>ゼンゼロダメージ計算ツール<br>by St</h1>
 
-    <div class="table-wrapper">
-        <table id="damage-table">
-            <!-- テーブルはJavaScriptで描画 -->
-        </table>
-    </div>
+  <div class="table-wrapper">
+    <table id="damage-table">
+      <!-- テーブルはJavaScriptで描画 -->
+    </table>
+  </div>
 
-    <div class="controls">
-        <button onclick="calculateAll()">ダメージ計算＆グラフ更新</button>
-        <button onclick="toggleDetails()">▼ 詳細ダメージを表示</button>
-        <button onclick="addScenario()">シナリオ追加</button>
-    </div>
+  <div class="controls">
+    <button onclick="toggleDetails()">▼ 詳細ダメージを表示</button>
+    <button onclick="addScenario()">シナリオ追加</button>
+  </div>
 
-    <div id="chart-wrapper">
-        <canvas id="damageChart"></canvas>
-    </div>
+  <div id="chart-wrapper">
+    <canvas id="damageChart"></canvas>
+  </div>
 
-    <script>
-        const levelCoefficient = 794;
-        let scenarioCount = 3;
-        const maxScenario = 10;
-        const minScenario = 1;
-        let chartInstance = null;
-        let scenarioNames = [];
+  <script>
+    const levelCoefficient = 794;
+    let scenarioCount = 3;
+    const maxScenario = 10;
+    const minScenario = 1;
+    let chartInstance = null;
+    let scenarioNames = [];
 
-        const percentFields = [
-            'atkPercent', 'combatAtkBuffPercent', 'dmgBonusPercent',
-            'critRatePercent', 'critDmgPercent', 'breakMultiplierPercent',
-            'defDownPercent', 'penetrationRatePercent',
-            'resistanceCorrectionPercent', 'weaknessCorrectionPercent',
-            'elementResistanceDownPercent', 'elementResistanceIgnorePercent',
-            'skillMultiplierPercent' // 新しく追加された項目
-        ];
+    const percentFields = [
+      'atkPercent', 'combatAtkBuffPercent', 'dmgBonusPercent',
+      'critRatePercent', 'critDmgPercent', 'breakMultiplierPercent',
+      'defDownPercent', 'penetrationRatePercent',
+      'resistanceCorrectionPercent', 'weaknessCorrectionPercent',
+      'elementResistanceDownPercent', 'elementResistanceIgnorePercent',
+      'skillMultiplierPercent' // 新しく追加された項目
+    ];
 
-        const inputItems = [
-            { field: 'charBaseAtk', label: 'キャラ基礎攻撃力' },
-            { field: 'gearBaseAtk', label: '音動機基礎攻撃力' },
-            { field: 'atkPercent', label: '攻撃力%' },
-            { field: 'atkFlat', label: '攻撃力加算' },
-            { field: 'combatAtkBuffPercent', label: '戦闘中攻撃力%バフ' },
-            { field: 'combatAtkFlatBuff', label: '戦闘中攻撃力加算バフ' },
-            { field: 'dmgBonusPercent', label: 'ダメージボーナス%' },
-            { field: 'critRatePercent', label: '会心率%', hint: '通常時は5%、<br>会心率UP効果で変動' },
-            { field: 'critDmgPercent', label: '会心ダメージ%', hint: '通常時は50%、<br>会心ダメUP効果で変動' },
-            { field: 'breakMultiplierPercent', label: 'ブレイク弱体倍率%', hint: '非ブレイクは100' },
-            { field: 'enemyDef', label: '敵防御力', hint: 'ボスは953、精鋭は794が基準値' },
-            { field: 'defDownPercent', label: '防御力ダウン%' },
-            { field: 'penetrationRatePercent', label: '貫通率%' },
-            { field: 'penetrationFlat', label: '貫通値' },
-            { field: 'resistanceCorrectionPercent', label: '耐性補正%', hint: '敵に耐性があれば20%' },
-            { field: 'weaknessCorrectionPercent', label: '弱点補正%', hint: '敵に弱点があれば20%' },
-            { field: 'elementResistanceDownPercent', label: '属性耐性ダウン%' },
-            { field: 'elementResistanceIgnorePercent', label: '属性耐性無視%' },
-            { field: 'skillMultiplierPercent', label: 'スキル倍率%' } // 新しく追加された項目
-        ];
+    const inputItems = [
+      { field: 'charBaseAtk', label: 'キャラ基礎攻撃力' },
+      { field: 'gearBaseAtk', label: '音動機基礎攻撃力' },
+      { field: 'atkPercent', label: '攻撃力%' },
+      { field: 'atkFlat', label: '攻撃力加算' },
+      { field: 'combatAtkBuffPercent', label: '戦闘中攻撃力%バフ' },
+      { field: 'combatAtkFlatBuff', label: '戦闘中攻撃力加算バフ' },
+      { field: 'dmgBonusPercent', label: 'ダメージボーナス%' },
+      { field: 'critRatePercent', label: '会心率%', hint: '通常時は5%、<br>会心率UP効果で変動' },
+      { field: 'critDmgPercent', label: '会心ダメージ%', hint: '通常時は50%、<br>会心ダメUP効果で変動' },
+      { field: 'breakMultiplierPercent', label: 'ブレイク弱体倍率%', hint: '非ブレイクは100' },
+      { field: 'enemyDef', label: '敵防御力', hint: 'ボスは953、精鋭は794が基準値' },
+      { field: 'defDownPercent', label: '防御力ダウン%' },
+      { field: 'penetrationRatePercent', label: '貫通率%' },
+      { field: 'penetrationFlat', label: '貫通値' },
+      { field: 'resistanceCorrectionPercent', label: '耐性補正%', hint: '敵に耐性があれば20%' },
+      { field: 'weaknessCorrectionPercent', label: '弱点補正%', hint: '敵に弱点があれば20%' },
+      { field: 'elementResistanceDownPercent', label: '属性耐性ダウン%' },
+      { field: 'elementResistanceIgnorePercent', label: '属性耐性無視%' },
+      { field: 'skillMultiplierPercent', label: 'スキル倍率%' } // 新しく追加された項目
+    ];
 
-        const defaultValues = {
-            'critRatePercent': 5,
-            'critDmgPercent': 50,
-            'breakMultiplierPercent': 100,
-            'enemyDef': 953,
-            'resistanceCorrectionPercent': 0,
-            'weaknessCorrectionPercent': 0,
-            'skillMultiplierPercent': 100 // 初期値として100%に設定
-        };
+    const defaultValues = {
+      'critRatePercent': 5,
+      'critDmgPercent': 50,
+      'breakMultiplierPercent': 100,
+      'enemyDef': 953,
+      'resistanceCorrectionPercent': 0,
+      'weaknessCorrectionPercent': 0,
+      'skillMultiplierPercent': 100 // 初期値として100%に設定
+    };
 
-        function renderTable() {
-            const table = document.getElementById('damage-table');
-            table.innerHTML = '';
+    function renderTable() {
+      const table = document.getElementById('damage-table');
+      table.innerHTML = '';
 
-            const headerRow = document.createElement('tr');
-            headerRow.innerHTML = `<th>項目</th><th>シナリオ1を複製</th>` +
-                Array.from({ length: scenarioCount }, (_, i) =>
-                    `<th><input type="text" id="name-${i}" value="${scenarioNames[i] || `シナリオ${i + 1}`}" onchange="saveInputs()"></th>`
-                ).join('');
-            table.appendChild(headerRow);
+      const headerRow = document.createElement('tr');
+      headerRow.innerHTML = `<th>項目</th><th>シナリオ1を複製</th>` +
+        Array.from({ length: scenarioCount }, (_, i) =>
+          `<th><input type="text" id="name-${i}" value="${scenarioNames[i] || `シナリオ${i + 1}`}" onchange="saveInputs()"></th>`
+        ).join('');
+      table.appendChild(headerRow);
 
-            for (const item of inputItems) {
-                const row = document.createElement('tr');
-                const hint = item.hint ? `<span class="hint-container"><span class="hint-icon">？</span><span class="hint-popup">${item.hint}</span></span>` : '';
-                row.innerHTML = `<td>${item.label}${hint}</td>
+      for (const item of inputItems) {
+        const row = document.createElement('tr');
+        const hint = item.hint ? `<span class="hint-container"><span class="hint-icon">？</span><span class="hint-popup">${item.hint}</span></span>` : '';
+        row.innerHTML = `<td>${item.label}${hint}</td>
       <td><input type="checkbox" id="sync-${item.field}" class="checkbox" onchange="syncField('${item.field}')"></td>` +
-                    Array.from({ length: scenarioCount }, (_, i) =>
-                        `<td><input type="number" id="${item.field}-${i}" onchange="onInputChange('${item.field}')"></td>`
-                    ).join('');
-                table.appendChild(row);
+          Array.from({ length: scenarioCount }, (_, i) =>
+            `<td><input type="number" id="${item.field}-${i}" onchange="onInputChange('${item.field}')"></td>`
+          ).join('');
+        table.appendChild(row);
+      }
+
+      // ダメージ行（期待値）
+      const dmgExpectedRow = document.createElement('tr');
+      dmgExpectedRow.classList.add('damage-row');
+      dmgExpectedRow.innerHTML = `<td>期待値ダメージ</td><td>-</td>` +
+        Array.from({ length: scenarioCount }, (_, i) => `<td class="damage" id="dmg-expected-${i}">-</td>`).join('');
+      table.appendChild(dmgExpectedRow);
+
+      // 折りたたみ対象（クリティカル）
+      const dmgCritRow = document.createElement('tr');
+      dmgCritRow.classList.add('foldable', 'damage-row');
+      dmgCritRow.innerHTML = `<td>クリティカルダメージ</td><td>-</td>` +
+        Array.from({ length: scenarioCount }, (_, i) => `<td class="damage" id="dmg-crit-${i}">-</td>`).join('');
+      table.appendChild(dmgCritRow);
+
+      // 折りたたみ対象（非クリティカル）
+      const dmgNonCritRow = document.createElement('tr');
+      dmgNonCritRow.classList.add('foldable', 'damage-row');
+      dmgNonCritRow.innerHTML = `<td>非クリティカルダメージ</td><td>-</td>` +
+        Array.from({ length: scenarioCount }, (_, i) => `<td class="damage" id="dmg-noncrit-${i}">-</td>`).join('');
+      table.appendChild(dmgNonCritRow);
+
+      // 削除ボタン行
+      const deleteRow = document.createElement('tr');
+      deleteRow.innerHTML = `<td colspan="2"></td>` +
+        Array.from({ length: scenarioCount }, (_, i) => `<td><button onclick="deleteScenario(${i})">削除</button></td>`).join('');
+      table.appendChild(deleteRow);
+
+      loadInputs();
+      applyDefaultValues();
+    }
+
+    function applyDefaultValues() {
+      for (const key in defaultValues) {
+        const value = defaultValues[key];
+        for (let i = 0; i < scenarioCount; i++) {
+          const elem = document.getElementById(`${key}-${i}`);
+          if (elem && !elem.value) {
+            elem.value = value;
+          }
+        }
+      }
+    }
+
+    function syncField(field) {
+      const isChecked = document.getElementById(`sync-${field}`).checked;
+      if (isChecked) {
+        const baseValue = document.getElementById(`${field}-0`).value;
+        for (let i = 1; i < scenarioCount; i++) {
+          const target = document.getElementById(`${field}-${i}`);
+          if (target) target.value = baseValue;
+        }
+        saveInputs();
+      }
+    }
+
+    function onInputChange(field) {
+      const isChecked = document.getElementById(`sync-${field}`).checked;
+      if (isChecked) {
+        const baseValue = document.getElementById(`${field}-0`).value;
+        for (let i = 1; i < scenarioCount; i++) {
+          const target = document.getElementById(`${field}-${i}`);
+          if (target) target.value = baseValue;
+        }
+      }
+      saveInputs();
+      calculateAll(); // 数値変更後にダメージ計算を実行
+    }
+
+    function calculateDamage(values) {
+      const v = { ...values };
+      percentFields.forEach(field => {
+        v[field] = (v[field] || 0) / 100;
+      });
+
+      const baseAtk = (v.charBaseAtk || 0) + (v.gearBaseAtk || 0);
+      const totalAtk = (baseAtk * (1 + (v.atkPercent || 0)) + (v.atkFlat || 0)) * (1 + (v.combatAtkBuffPercent || 0)) + (v.combatAtkFlatBuff || 0);
+      const dmgBuff = 1 + (v.dmgBonusPercent || 0);
+      const breakBuff = (v.breakMultiplierPercent || 0);
+
+      const defPart = v.enemyDef || 0;
+      const defReduction = (defPart * (1 - (v.defDownPercent || 0)) * (1 - (v.penetrationRatePercent || 0))) - (v.penetrationFlat || 0);
+      const defFactor = levelCoefficient / (levelCoefficient + defReduction);
+
+      const resist = (1 - (v.resistanceCorrectionPercent || 0) + (v.weaknessCorrectionPercent || 0) + (v.elementResistanceDownPercent || 0) + (v.elementResistanceIgnorePercent || 0));
+
+      const critBuff_expected = (v.critRatePercent || 0) * (1 + (v.critDmgPercent || 0));
+      const critBuff_critical = 1 + (v.critDmgPercent || 0);
+      const critBuff_nonCritical = 1;
+
+      const skillMultiplier = (v.skillMultiplierPercent || 0);
+
+      const dmg_expected = totalAtk * dmgBuff * critBuff_expected * breakBuff * defFactor * resist * skillMultiplier;
+      const dmg_crit = totalAtk * dmgBuff * critBuff_critical * breakBuff * defFactor * resist * skillMultiplier;
+      const dmg_nonCrit = totalAtk * dmgBuff * critBuff_nonCritical * breakBuff * defFactor * resist * skillMultiplier;
+
+      return {
+        expected: Math.round(dmg_expected),
+        crit: Math.round(dmg_crit),
+        nonCrit: Math.round(dmg_nonCrit)
+      };
+    }
+
+    function calculateAll() {
+      const damages = [];
+      for (let i = 0; i < scenarioCount; i++) {
+        const inputs = {};
+        for (const item of inputItems) {
+          inputs[item.field] = parseFloat(document.getElementById(`${item.field}-${i}`).value) || 0;
+        }
+        const dmg = calculateDamage(inputs);
+        document.getElementById(`dmg-expected-${i}`).innerText = dmg.expected;
+        document.getElementById(`dmg-crit-${i}`).innerText = dmg.crit;
+        document.getElementById(`dmg-noncrit-${i}`).innerText = dmg.nonCrit;
+        damages.push(dmg.expected);
+      }
+      updateChart(damages);
+    }
+
+    function updateChart(damages) {
+      const ctx = document.getElementById('damageChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Array.from({ length: scenarioCount }, (_, i) => document.getElementById(`name-${i}`).value || `シナリオ${i + 1}`),
+          datasets: [{
+            label: '期待値ダメージ',
+            data: damages,
+            backgroundColor: 'rgba(0, 255, 229, 0.7)',
+            borderColor: 'rgba(0, 255, 229, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#e0e0e0' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+              ticks: { color: '#e0e0e0' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
             }
-
-            // ダメージ行（期待値）
-            const dmgExpectedRow = document.createElement('tr');
-            dmgExpectedRow.classList.add('damage-row');
-            dmgExpectedRow.innerHTML = `<td>期待値ダメージ</td><td>-</td>` +
-                Array.from({ length: scenarioCount }, (_, i) => `<td class="damage" id="dmg-expected-${i}">-</td>`).join('');
-            table.appendChild(dmgExpectedRow);
-
-            // 折りたたみ対象（クリティカル）
-            const dmgCritRow = document.createElement('tr');
-            dmgCritRow.classList.add('foldable', 'damage-row');
-            dmgCritRow.innerHTML = `<td>クリティカルダメージ</td><td>-</td>` +
-                Array.from({ length: scenarioCount }, (_, i) => `<td class="damage" id="dmg-crit-${i}">-</td>`).join('');
-            table.appendChild(dmgCritRow);
-
-            // 折りたたみ対象（非クリティカル）
-            const dmgNonCritRow = document.createElement('tr');
-            dmgNonCritRow.classList.add('foldable', 'damage-row');
-            dmgNonCritRow.innerHTML = `<td>非クリティカルダメージ</td><td>-</td>` +
-                Array.from({ length: scenarioCount }, (_, i) => `<td class="damage" id="dmg-noncrit-${i}">-</td>`).join('');
-            table.appendChild(dmgNonCritRow);
-
-            // 削除ボタン行
-            const deleteRow = document.createElement('tr');
-            deleteRow.innerHTML = `<td colspan="2"></td>` +
-                Array.from({ length: scenarioCount }, (_, i) => `<td><button onclick="deleteScenario(${i})">削除</button></td>`).join('');
-            table.appendChild(deleteRow);
-
-            loadInputs();
-            applyDefaultValues();
-        }
-
-        function applyDefaultValues() {
-            for (const key in defaultValues) {
-                const value = defaultValues[key];
-                for (let i = 0; i < scenarioCount; i++) {
-                    const elem = document.getElementById(`${key}-${i}`);
-                    if (elem && !elem.value) {
-                        elem.value = value;
-                    }
-                }
+          },
+          plugins: {
+            legend: {
+              labels: { color: '#e0e0e0' }
             }
+          }
         }
+      });
+    }
 
-        function syncField(field) {
-            const isChecked = document.getElementById(`sync-${field}`).checked;
-            if (isChecked) {
-                const baseValue = document.getElementById(`${field}-0`).value;
-                for (let i = 1; i < scenarioCount; i++) {
-                    const target = document.getElementById(`${field}-${i}`);
-                    if (target) target.value = baseValue;
-                }
-                saveInputs();
-            }
+    function addScenario() {
+      if (scenarioCount < maxScenario) {
+        scenarioCount++;
+        renderTable();
+        calculateAll();
+      } else {
+        alert("シナリオは最大10個までです！");
+      }
+    }
+
+    function deleteScenario(index) {
+      if (scenarioCount <= minScenario) {
+        alert("シナリオは最低1個必要です！");
+        return;
+      }
+      scenarioNames.splice(index, 1);
+      scenarioCount--;
+      renderTable();
+      calculateAll();
+    }
+
+    function saveInputs() {
+      const data = {};
+      scenarioNames = [];
+      for (const item of inputItems) {
+        for (let i = 0; i < scenarioCount; i++) {
+          const elem = document.getElementById(`${item.field}-${i}`);
+          if (elem) data[`${item.field}-${i}`] = elem.value;
         }
+      }
+      for (let i = 0; i < scenarioCount; i++) {
+        const nameInput = document.getElementById(`name-${i}`);
+        if (nameInput) scenarioNames[i] = nameInput.value;
+      }
+      localStorage.setItem('zenzeroDamageTool', JSON.stringify(data));
+      localStorage.setItem('zenzeroScenarioNames', JSON.stringify(scenarioNames));
+    }
 
-        function onInputChange(field) {
-            const isChecked = document.getElementById(`sync-${field}`).checked;
-            if (isChecked) {
-                const baseValue = document.getElementById(`${field}-0`).value;
-                for (let i = 1; i < scenarioCount; i++) {
-                    const target = document.getElementById(`${field}-${i}`);
-                    if (target) target.value = baseValue;
-                }
-            }
-            saveInputs();
+    function loadInputs() {
+      const saved = localStorage.getItem('zenzeroDamageTool');
+      const savedNames = localStorage.getItem('zenzeroScenarioNames');
+      if (saved) {
+        const data = JSON.parse(saved);
+        for (let key in data) {
+          if (document.getElementById(key)) {
+            document.getElementById(key).value = data[key];
+          }
         }
+      }
+      if (savedNames) {
+        scenarioNames = JSON.parse(savedNames);
+      }
+    }
 
-        function calculateDamage(values) {
-            const v = { ...values };
-            percentFields.forEach(field => {
-                v[field] = (v[field] || 0) / 100;
-            });
+    function toggleDetails() {
+      document.querySelectorAll('.foldable').forEach(row => {
+        row.style.display = (row.style.display === 'table-row') ? 'none' : 'table-row';
+      });
+    }
 
-            const baseAtk = (v.charBaseAtk || 0) + (v.gearBaseAtk || 0);
-            const totalAtk = (baseAtk * (1 + (v.atkPercent || 0)) + (v.atkFlat || 0)) * (1 + (v.combatAtkBuffPercent || 0)) + (v.combatAtkFlatBuff || 0);
-            const dmgBuff = 1 + (v.dmgBonusPercent || 0);
-            const breakBuff = (v.breakMultiplierPercent || 0);
-
-            const defPart = v.enemyDef || 0;
-            const defReduction = (defPart * (1 - (v.defDownPercent || 0)) * (1 - (v.penetrationRatePercent || 0))) - (v.penetrationFlat || 0);
-            const defFactor = levelCoefficient / (levelCoefficient + defReduction);
-
-            const resist = (1 - (v.resistanceCorrectionPercent || 0) + (v.weaknessCorrectionPercent || 0) + (v.elementResistanceDownPercent || 0) + (v.elementResistanceIgnorePercent || 0));
-
-            const critBuff_expected = (v.critRatePercent || 0) * (1 + (v.critDmgPercent || 0));
-            const critBuff_critical = 1 + (v.critDmgPercent || 0);
-            const critBuff_nonCritical = 1;
-
-            const skillMultiplier = (v.skillMultiplierPercent || 0);
-
-            const dmg_expected = totalAtk * dmgBuff * critBuff_expected * breakBuff * defFactor * resist * skillMultiplier;
-            const dmg_crit = totalAtk * dmgBuff * critBuff_critical * breakBuff * defFactor * resist * skillMultiplier;
-            const dmg_nonCrit = totalAtk * dmgBuff * critBuff_nonCritical * breakBuff * defFactor * resist * skillMultiplier;
-
-            return {
-                expected: Math.round(dmg_expected),
-                crit: Math.round(dmg_crit),
-                nonCrit: Math.round(dmg_nonCrit)
-            };
-        }
-
-        function calculateAll() {
-            const damages = [];
-            for (let i = 0; i < scenarioCount; i++) {
-                const inputs = {};
-                for (const item of inputItems) {
-                    inputs[item.field] = parseFloat(document.getElementById(`${item.field}-${i}`).value) || 0;
-                }
-                const dmg = calculateDamage(inputs);
-                document.getElementById(`dmg-expected-${i}`).innerText = dmg.expected;
-                document.getElementById(`dmg-crit-${i}`).innerText = dmg.crit;
-                document.getElementById(`dmg-noncrit-${i}`).innerText = dmg.nonCrit;
-                damages.push(dmg.expected);
-            }
-            updateChart(damages);
-        }
-
-        function updateChart(damages) {
-            const ctx = document.getElementById('damageChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
-
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array.from({ length: scenarioCount }, (_, i) => document.getElementById(`name-${i}`).value || `シナリオ${i + 1}`),
-                    datasets: [{
-                        label: '期待値ダメージ',
-                        data: damages,
-                        backgroundColor: 'rgba(0, 255, 229, 0.7)',
-                        borderColor: 'rgba(0, 255, 229, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#e0e0e0' },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        },
-                        x: {
-                            ticks: { color: '#e0e0e0' },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: { color: '#e0e0e0' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function addScenario() {
-            if (scenarioCount < maxScenario) {
-                scenarioCount++;
-                renderTable();
-                calculateAll();
-            } else {
-                alert("シナリオは最大10個までです！");
-            }
-        }
-
-        function deleteScenario(index) {
-            if (scenarioCount <= minScenario) {
-                alert("シナリオは最低1個必要です！");
-                return;
-            }
-            scenarioNames.splice(index, 1);
-            scenarioCount--;
-            renderTable();
-            calculateAll();
-        }
-
-        function saveInputs() {
-            const data = {};
-            scenarioNames = [];
-            for (const item of inputItems) {
-                for (let i = 0; i < scenarioCount; i++) {
-                    const elem = document.getElementById(`${item.field}-${i}`);
-                    if (elem) data[`${item.field}-${i}`] = elem.value;
-                }
-            }
-            for (let i = 0; i < scenarioCount; i++) {
-                const nameInput = document.getElementById(`name-${i}`);
-                if (nameInput) scenarioNames[i] = nameInput.value;
-            }
-            localStorage.setItem('zenzeroDamageTool', JSON.stringify(data));
-            localStorage.setItem('zenzeroScenarioNames', JSON.stringify(scenarioNames));
-        }
-
-        function loadInputs() {
-            const saved = localStorage.getItem('zenzeroDamageTool');
-            const savedNames = localStorage.getItem('zenzeroScenarioNames');
-            if (saved) {
-                const data = JSON.parse(saved);
-                for (let key in data) {
-                    if (document.getElementById(key)) {
-                        document.getElementById(key).value = data[key];
-                    }
-                }
-            }
-            if (savedNames) {
-                scenarioNames = JSON.parse(savedNames);
-            }
-        }
-
-        function toggleDetails() {
-            document.querySelectorAll('.foldable').forEach(row => {
-                row.style.display = (row.style.display === 'table-row') ? 'none' : 'table-row';
-            });
-        }
-
-        window.onload = function () {
-            renderTable();
-            calculateAll();
-        };
-    </script>
+    window.onload = function () {
+      renderTable();
+      calculateAll();
+    };
+  </script>
 
 </body>
 
