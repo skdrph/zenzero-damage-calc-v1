@@ -63,6 +63,12 @@
       overflow-x: auto;
     }
 
+    th:first-child, td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 10;  /* 他の列と重ならないようにする */
+}
+
     table {
       width: 100%;
       min-width: 1000px;
@@ -130,6 +136,15 @@
       color: var(--accent-color);
     }
 
+    .hint-container {
+  position: relative; /* 補足文が位置するために親要素に設定 */
+  z-index: 999; /* 他の要素より前に表示されるように */
+}
+th, td {
+  position: relative;  /* z-indexが機能するために必要 */
+  z-index: 1;  /* 他のセルより手前に来ないように */
+}
+
     .hint-popup {
       display: none;
       position: absolute;
@@ -141,7 +156,7 @@
       border-radius: 5px;
       font-size: 0.8em;
       white-space: nowrap;
-      z-index: 10;
+      z-index: 9999;
       box-shadow: var(--shadow);
       max-width: 90vw;
       word-wrap: break-word;
@@ -206,8 +221,8 @@
       { field: 'combatAtkBuffPercent', label: '戦闘中攻撃力%バフ' },
       { field: 'combatAtkFlatBuff', label: '戦闘中攻撃力加算バフ' },
       { field: 'dmgBonusPercent', label: 'ダメージボーナス%' },
-      { field: 'critRatePercent', label: '会心率%', hint: '通常時は5%、<br>会心率UP効果で変動' },
-      { field: 'critDmgPercent', label: '会心ダメージ%', hint: '通常時は50%、<br>会心ダメUP効果で変動' },
+      { field: 'critRatePercent', label: '会心率%' },
+      { field: 'critDmgPercent', label: '会心ダメージ%'},
       { field: 'breakMultiplierPercent', label: 'ブレイク弱体倍率%', hint: '非ブレイクは100' },
       { field: 'enemyDef', label: '敵防御力', hint: 'ボスは953、精鋭は794が基準値' },
       { field: 'defDownPercent', label: '防御力ダウン%' },
