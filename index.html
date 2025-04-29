@@ -236,7 +236,7 @@
             table.innerHTML = '';
 
             const headerRow = document.createElement('tr');
-            headerRow.innerHTML = `<th>項目</th><th>シナリオ1<br>を複製</th>` +
+            headerRow.innerHTML = `<th>項目</th><th>シナリオ1を複製</th>` +
                 Array.from({ length: scenarioCount }, (_, i) =>
                     `<th><input type="text" id="name-${i}" value="${scenarioNames[i] || `シナリオ${i + 1}`}" onchange="saveInputs()"></th>`
                 ).join('');
